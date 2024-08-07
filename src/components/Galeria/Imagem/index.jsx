@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import BotaoIcone from '../../BotaoIcone'
 
 const Figure = styled.figure`
-    display: none;
+    display: ${(props) => (props.$expandida ? 'flex' : 'none')};;
     flex-direction: column;
     flex: 1;
     border-radius: 20px;
@@ -10,7 +10,6 @@ const Figure = styled.figure`
     position: relative;
     width: 100%;
     max-width: 448px;
-    ${(props) => (props.$expandida ? 'none' : '336px')};
     margin: 0;
 
     @media screen and (min-width: 744px) {
@@ -72,7 +71,7 @@ const Image = styled.img`
     object-fit: cover;
     border-radius: 20px 20px 0 0;
 
-    @media screen and (min-width: 1440px) {
+    @media screen and (min-width: 744px) {
         max-height: ${(props) => (props.$expandida ? '661px' : '256px')};
     }
 `
@@ -113,10 +112,22 @@ const Imagem = ({ foto, expandida = false, aoZoomSolicitado, aoAlternarFavorito,
         return result;
     };
 
+        const figureProps = {
+            $expandida: expandida,
+            id: `foto-${foto.id}`
+        };
+
+        if (!expandida) {
+            figureProps['data-categoria'] = tag.titulo;
+            figureProps['data-active'] = checkActive(tag.titulo);
+        }
+
     return (
         <>
-            <Figure $expandida={expandida} id={`foto-${foto.id}`} data-categoria={tag.titulo} data-active={checkActive(tag.titulo)}>
-                <Tag>{tag.titulo}</Tag>
+            <Figure
+                {...figureProps}
+            >
+                {tag && <Tag>{tag.titulo}</Tag>}
                 <Image src={foto.path} alt={foto.alt} $expandida={expandida} />
                 <figcaption>
                     <Principal>
